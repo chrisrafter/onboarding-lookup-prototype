@@ -3,329 +3,471 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DataBlueprint — Onboarding</title>
+<title>DataBlueprint — See it in action</title>
 <style>
-  :root{--navy:#1f2d3d;--blue:#2e75b6;--blue-d:#245d92;--green:#5a9367;--green-d:#3d6b48;
-    --amber:#c98a1e;--grey:#566573;--line:#e2e8ee;--bg:#f4f6f9;--card:#fff;--shadow:0 6px 24px rgba(31,45,61,.10)}
+  :root{
+    --navy:#1f2d3d;--blue:#2e75b6;--blue-d:#245d92;--green:#5a9367;--green-d:#3d6b48;
+    --amber:#c98a1e;--amber-bg:#fdf6e9;--amber-line:#eadfc8;
+    --red:#b03a2e;--grey:#566573;--line:#e2e8ee;--bg:#f4f6f9;--card:#fff;
+    --shadow:0 6px 24px rgba(31,45,61,.10)
+  }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#222;background:var(--bg)}
   .bar{background:var(--navy);color:#fff;height:42px;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:13px}
   .bar .pill{background:rgba(255,255,255,.14);border-radius:20px;padding:3px 12px}
-  .center{max-width:640px;margin:0 auto;padding:46px 24px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:34px}
-  h1{font-size:26px;margin:0 0 6px;color:var(--navy)}
-  .sub{color:var(--grey);font-size:15px;margin:0 0 22px}
+  .center{max-width:680px;margin:0 auto;padding:36px 20px 60px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:28px 32px}
+  h1{font-size:24px;margin:0 0 6px;color:var(--navy);line-height:1.25}
+  .sub{color:var(--grey);font-size:15px;margin:0 0 20px;line-height:1.5}
   label{font-size:13px;font-weight:600;color:var(--grey)}
-  input[type=text],input:not([type]){width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit;margin-top:6px}
+  input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit}
   input:focus{outline:none;border-color:var(--blue)}
-  .tag{display:inline-block;background:#fdf6e9;color:var(--amber);font-size:11px;font-weight:700;letter-spacing:.5px;border-radius:6px;padding:3px 8px;text-transform:uppercase}
-  .infograph{display:flex;gap:16px;background:#f7faf8;border:1px solid #d9eadf;border-radius:12px;padding:16px;margin:18px 0 8px;animation:fade .4s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  .ig-ic{width:54px;height:54px;border-radius:12px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-  .found-name{font-weight:700;color:var(--navy);font-size:16px}
-  .synopsis{color:#33414f;font-size:14.5px;line-height:1.5;margin-top:4px}
-  .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 11px;font-size:12.5px;color:var(--grey)}
-  .kpi b{color:var(--navy)}
-  .loading{display:flex;align-items:center;gap:10px;color:var(--grey);font-size:14px;margin:18px 0 4px}
-  .spin{width:18px;height:18px;border:2px solid #cfd8e0;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite}
+  .tag{display:inline-block;background:var(--amber-bg);color:var(--amber);font-size:11px;font-weight:700;letter-spacing:.5px;border-radius:6px;padding:3px 8px;text-transform:uppercase}
+
+  /* Step indicator */
+  .steps{display:flex;align-items:center;margin-bottom:20px}
+  .step-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--grey);white-space:nowrap}
+  .step-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .step-dot.done{background:var(--green);color:#fff}
+  .step-dot.active{background:var(--blue);color:#fff}
+  .step-dot.pending{background:var(--line);color:var(--grey)}
+  .step-conn{flex:1;height:2px;background:var(--line);margin:0 6px;min-width:14px}
+  .step-conn.done{background:var(--green)}
+
+  /* Industry selection */
+  .industry-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0 4px}
+  @media(max-width:480px){.industry-grid{grid-template-columns:1fr}}
+  .ic{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;font-family:inherit;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:10px;transition:border-color .15s,box-shadow .15s}
+  .ic:hover{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.08)}
+  .ic.selected{border-color:var(--blue);background:#f0f6fc;box-shadow:0 0 0 3px rgba(46,117,182,.10)}
+  .ic .ic-icon{font-size:22px;flex-shrink:0}
+  .ic .ic-label{font-weight:500;line-height:1.3}
+
+  /* Loading */
+  .loading{display:flex;align-items:center;gap:10px;color:var(--grey);font-size:14px;margin:18px 0}
+  .spin{width:18px;height:18px;border:2px solid #cfd8e0;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite;flex-shrink:0}
   @keyframes sp{to{transform:rotate(360deg)}}
-  .none{background:#fbf7ef;border:1px solid #eadfc8;border-radius:12px;padding:16px;margin-top:18px;color:#7a6533;font-size:14px}
-  .reassure{font-size:13px;color:var(--grey);margin-top:8px}
-  .meta{font-size:11px;color:#9aa7b2;margin-top:14px}
 
-  /* Verdict (accuracy only — not navigation) */
-  .verdict{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
-  .verdict-label{font-size:12px;color:var(--grey);margin-bottom:6px}
-  .verdict-btns{display:flex;gap:8px}
-  .verdict-btns button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
-  .verdict-btns button:hover{border-color:var(--blue)}
+  /* Simulated badge */
+  .sim-badge{display:inline-flex;align-items:center;gap:5px;background:var(--amber-bg);color:var(--amber);border:1.5px solid var(--amber-line);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
 
-  /* Primary CTA */
-  .cta-row{margin-top:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-  .btn-primary{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+  /* Company infograph */
+  .infograph{display:flex;gap:14px;background:#f7faf8;border:1px solid #d9eadf;border-radius:12px;padding:16px;margin:16px 0 12px;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .ig-ic{width:50px;height:50px;border-radius:10px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .ig-body{flex:1;min-width:0}
+  .found-name{font-weight:700;color:var(--navy);font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .synopsis{color:#33414f;font-size:13.5px;line-height:1.5;margin-top:3px}
+  .kpis{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:12px;color:var(--grey)}
+  .kpi b{color:var(--navy)}
+
+  /* Framing disclosure */
+  .framing{background:var(--amber-bg);border:1px solid var(--amber-line);border-radius:12px;padding:14px 16px;font-size:13.5px;color:#6b4f1a;line-height:1.55;margin:14px 0}
+  .framing b{color:#5a3d10}
+
+  /* Insight section */
+  .insight-box{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+  .insight-title{font-size:17px;font-weight:700;color:var(--navy);margin:0 0 4px}
+  .takeaway{font-size:14px;color:var(--grey);margin:0 0 16px;line-height:1.5}
+
+  /* Chart */
+  .chart-wrap{background:#f7faf8;border:1px solid #d9eadf;border-radius:12px;padding:14px 16px;margin:0 0 14px}
+  .chart-caption{font-size:11px;color:#9aa7b2;margin-bottom:10px;font-style:italic}
+
+  /* Table */
+  .table-wrap{overflow-x:auto;margin:0 0 14px;border-radius:10px;border:1px solid var(--line)}
+  .insight-table{width:100%;border-collapse:collapse;font-size:13px}
+  .insight-table th{background:#f4f6f9;color:var(--grey);font-weight:600;font-size:11.5px;text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+  .insight-table td{padding:8px 12px;border-bottom:1px solid var(--line);color:#222}
+  .insight-table tr:last-child td{border-bottom:none}
+  .insight-table tr:hover td{background:#f9fbfc}
+
+  /* Exposition */
+  .exposition{font-size:13.5px;color:#33414f;line-height:1.6;background:#f4f6f9;border-radius:10px;padding:13px 16px;margin-top:4px}
+
+  /* CTA / buttons */
+  .cta-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:20px}
+  .btn-primary{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px 22px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
   .btn-primary:hover{background:var(--blue-d)}
   .btn-primary:disabled{opacity:.5;cursor:default}
   .link-secondary{background:none;border:none;color:var(--grey);font-size:13px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0}
   .link-secondary:hover{color:var(--navy)}
 
-  /* Step indicator */
-  .steps{display:flex;align-items:center;margin-bottom:24px}
-  .step-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--grey)}
-  .step-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-  .step-dot.done{background:var(--green);color:#fff}
-  .step-dot.active{background:var(--blue);color:#fff}
-  .step-dot.pending{background:var(--line);color:var(--grey)}
-  .step-connector{flex:1;height:2px;background:var(--line);margin:0 8px;min-width:20px}
-  .step-connector.done{background:var(--green)}
+  /* Feedback thumbs */
+  .feedback{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+  .feedback-label{font-size:12px;color:var(--grey);margin-bottom:6px}
+  .feedback-btns{display:flex;gap:8px}
+  .feedback-btns button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
+  .feedback-btns button:hover{border-color:var(--blue)}
+  .meta{font-size:11px;color:#9aa7b2;margin-top:12px}
 
-  /* Goal selection */
-  #screen-goals{display:none}
-  .goals-grid{display:grid;gap:10px;margin:20px 0 4px}
-  .goal-option{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;font-size:14.5px;color:var(--navy);text-align:left;font-family:inherit;line-height:1.4;transition:border-color .15s,box-shadow .15s;display:flex;align-items:center;gap:12px}
-  .goal-option:hover{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.08)}
-  .goal-option.selected{border-color:var(--blue);background:#f0f6fc;box-shadow:0 0 0 3px rgba(46,117,182,.10)}
-  .goal-icon{font-size:20px;flex-shrink:0}
+  /* Screen 3 */
+  .reassure-box{background:#f0f6fc;border:1px solid #c5ddf4;border-radius:12px;padding:14px 16px;font-size:13.5px;color:#1e4d7b;line-height:1.55;margin:14px 0 22px}
 
-  /* Data placeholder */
-  #screen-data{display:none}
-  .check-circle{width:60px;height:60px;border-radius:50%;background:#f0f6fc;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px}
+  /* Error */
+  .error-box{background:#fef9f0;border:1px solid var(--amber-line);border-radius:12px;padding:14px 16px;color:#7a4f1a;font-size:14px;margin:16px 0}
+
+  /* Hidden screens */
+  #screen-sim{display:none}
+  #screen-cta{display:none}
 </style>
 </head>
 <body>
-  <div class="bar"><b>DataBlueprint</b> <span class="pill">Onboarding</span></div>
+  <div class="bar"><b>DataBlueprint</b> <span class="pill">See it in action</span></div>
 
-  <!-- Screen 1: Company lookup -->
-  <div class="center" id="screen-lookup">
+  <!-- ── Screen 1: Choose industry ───────────────────────────────────────── -->
+  <div class="center" id="screen-industry">
+    <div id="step-ind" class="steps"></div>
     <div class="card">
-      <span class="tag">Step toward your first answer</span>
-      <h1 style="margin-top:10px">Tell us who you are</h1>
-      <p class="sub">Start typing your company name — we'll look it up and tailor everything to you.</p>
-      <label for="org">Company or organization</label>
-      <input id="org" placeholder="e.g. Acme Mechanical" autocomplete="off">
-      <div id="out"></div>
-      <div class="meta" id="meta"></div>
-    </div>
-    <p class="reassure" style="text-align:center">This page tests how well the live lookup performs across real companies. Try your own customers' names, SMBs, and obscure local businesses.</p>
-  </div>
-
-  <!-- Screen 2: Goal selection (Step 1 of 2) -->
-  <div class="center" id="screen-goals">
-    <div id="goals-steps" class="steps"></div>
-    <div class="card">
-      <span class="tag">Step 1 of 2</span>
-      <h1 style="margin-top:10px">Almost there!</h1>
-      <p class="sub">What do you want to figure out first? Pick one — you can change it anytime.</p>
-      <div class="goals-grid">
-        <button class="goal-option" onclick="selectGoal(this,'revenue')">
-          <span class="goal-icon">💰</span>Which products or services make the most money?
+      <h1>Let's show you what DataBlueprint can do — for a business like yours.</h1>
+      <p class="sub">Pick your industry. We'll demo a realistic example first — no signup, no data, nothing to share yet.</p>
+      <div class="industry-grid" id="industry-grid">
+        <button class="ic" onclick="selectIndustry(this,'HVAC / Field Services')">
+          <span class="ic-icon">🔧</span><span class="ic-label">HVAC / Field Services</span>
         </button>
-        <button class="goal-option" onclick="selectGoal(this,'losses')">
-          <span class="goal-icon">📉</span>Where am I losing money?
+        <button class="ic" onclick="selectIndustry(this,'Bakery / Specialty Food')">
+          <span class="ic-icon">🥐</span><span class="ic-label">Bakery / Specialty Food</span>
         </button>
-        <button class="goal-option" onclick="selectGoal(this,'customers')">
-          <span class="goal-icon">🤝</span>Who are my most valuable customers?
+        <button class="ic" onclick="selectIndustry(this,'Marketing Agency')">
+          <span class="ic-icon">📊</span><span class="ic-label">Marketing Agency</span>
         </button>
-        <button class="goal-option" onclick="selectGoal(this,'custom')">
-          <span class="goal-icon">✏️</span>Let me type my own goal…
+        <button class="ic" onclick="selectIndustry(this,'Professional Services / Accounting')">
+          <span class="ic-icon">🧾</span><span class="ic-label">Professional Services / Accounting</span>
+        </button>
+        <button class="ic" onclick="selectIndustry(this,'Specialty Contracting / Construction')">
+          <span class="ic-icon">🏗️</span><span class="ic-label">Specialty Contracting / Construction</span>
+        </button>
+        <button class="ic" id="other-card" onclick="toggleOther(this)">
+          <span class="ic-icon">✏️</span><span class="ic-label">Other…</span>
         </button>
       </div>
-      <div id="custom-goal-row" style="display:none;margin-top:4px">
-        <input id="custom-goal-input" placeholder="Describe what you want to figure out…" autocomplete="off" style="margin-top:0">
+      <div id="other-row" style="display:none;margin-top:4px">
+        <label for="other-input">Describe your industry</label>
+        <input id="other-input" placeholder="e.g. Auto repair, Landscaping, SaaS…" autocomplete="off" style="margin-top:6px">
+        <div class="cta-row" style="margin-top:12px">
+          <button class="btn-primary" id="other-go" onclick="submitOther()" disabled>See example →</button>
+        </div>
+      </div>
+      <div id="ind-loading" style="display:none" class="loading">
+        <span class="spin"></span><span id="ind-loading-msg">Building a sample business…</span>
+      </div>
+      <div id="ind-error" style="display:none" class="error-box">
+        Something went wrong. <button class="link-secondary" onclick="retryLast()">Try again →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Screen 2: Simulation result ─────────────────────────────────────── -->
+  <div class="center" id="screen-sim">
+    <div id="step-sim" class="steps"></div>
+    <div class="card" id="sim-card"></div>
+  </div>
+
+  <!-- ── Screen 3: Get it on your real data ──────────────────────────────── -->
+  <div class="center" id="screen-cta">
+    <div id="step-cta" class="steps"></div>
+    <div class="card">
+      <span class="tag">When you're ready</span>
+      <h1 style="margin-top:10px">Ready to see this on your real numbers?</h1>
+      <div class="reassure-box">
+        You choose what to connect, and when. Your data stays yours — we never sell it or use it to
+        train models for anyone else.
       </div>
       <div class="cta-row">
-        <button class="btn-primary" id="btnGoalContinue" disabled onclick="advanceToData()">Continue →</button>
-        <button class="link-secondary" onclick="goBack()">← Back</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Screen 3: Data step placeholder (Step 2 of 2) -->
-  <div class="center" id="screen-data">
-    <div id="data-steps" class="steps"></div>
-    <div class="card" style="text-align:center;padding:48px 34px">
-      <div class="check-circle">🎯</div>
-      <h1 style="font-size:22px">You're all set, <span id="confirmed-name"></span>!</h1>
-      <p class="sub" style="margin-bottom:0">Your workspace is being personalized around your goal. We'll walk you through connecting your data next.</p>
-      <div class="cta-row" style="justify-content:center;margin-top:28px">
-        <button class="btn-primary" onclick="alert('Data connection step coming soon!')">Connect my data →</button>
+        <button class="btn-primary" onclick="alert('Account creation coming soon!')">Create my free account</button>
+        <button class="link-secondary" onclick="keepExploring()">Not yet — keep exploring</button>
       </div>
     </div>
   </div>
 
 <script>
-const org = document.getElementById('org');
-const out = document.getElementById('out');
-const meta = document.getElementById('meta');
-const customGoalInput = document.getElementById('custom-goal-input');
-
-let timer = null, lastQuery = '', reqId = 0;
-const state = { company: '', goal: '', advanced: false };
+// ── State ─────────────────────────────────────────────────────────────────
+const state = { industry: '', lastResult: null, advanced: false };
+let lastIndustryEl = null;
 
 // ── Step indicator ────────────────────────────────────────────────────────
-function buildSteps(containerId, activeIndex) {
-  const container = document.getElementById(containerId);
-  const labels = ['Company', 'Your goal', 'Add data'];
-  container.innerHTML = '';
-  labels.forEach((label, i) => {
+function buildSteps(containerId, activeIdx) {
+  const el = document.getElementById(containerId);
+  const steps = [
+    { label: 'Pick industry' },
+    { label: 'See insight' },
+    { label: 'Connect data' }
+  ];
+  el.innerHTML = '';
+  steps.forEach((s, i) => {
     const dot = document.createElement('div');
-    dot.className = 'step-dot ' + (i < activeIndex ? 'done' : i === activeIndex ? 'active' : 'pending');
-    dot.textContent = i < activeIndex ? '✓' : String(i + 1);
+    dot.className = 'step-dot ' + (i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending');
+    dot.textContent = i < activeIdx ? '✓' : String(i + 1);
     const lbl = document.createElement('span');
-    lbl.textContent = label;
+    lbl.textContent = s.label;
     const item = document.createElement('div');
     item.className = 'step-item';
     item.append(dot, lbl);
-    container.append(item);
-    if (i < labels.length - 1) {
+    el.append(item);
+    if (i < steps.length - 1) {
       const conn = document.createElement('div');
-      conn.className = 'step-connector' + (i < activeIndex ? ' done' : '');
-      container.append(conn);
+      conn.className = 'step-conn' + (i < activeIdx ? ' done' : '');
+      el.append(conn);
     }
   });
 }
 
-// ── Input listener ────────────────────────────────────────────────────────
-org.addEventListener('input', () => {
-  const v = org.value.trim();
-  clearTimeout(timer);
-  // Clear result and reset advance guard whenever the user retypes
-  out.innerHTML = '';
-  meta.textContent = '';
-  lastQuery = '';
-  state.advanced = false;
-  if (v.length < 2) return;
-  timer = setTimeout(() => doLookup(v), 600);
+// ── Screen navigation ──────────────────────────────────────────────────────
+function showScreen(name) {
+  ['screen-industry', 'screen-sim', 'screen-cta'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('screen-' + name).style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Industry selection ────────────────────────────────────────────────────
+function selectIndustry(el, industry) {
+  // deselect all, select clicked
+  document.querySelectorAll('.ic').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  lastIndustryEl = el;
+  // hide other-row if it was open
+  if (el.id !== 'other-card') {
+    document.getElementById('other-row').style.display = 'none';
+  }
+  doSimulate(industry, el);
+}
+
+function toggleOther(el) {
+  document.querySelectorAll('.ic').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  lastIndustryEl = el;
+  const row = document.getElementById('other-row');
+  row.style.display = 'block';
+  document.getElementById('other-input').focus();
+}
+
+const otherInput = document.getElementById('other-input');
+otherInput.addEventListener('input', () => {
+  document.getElementById('other-go').disabled = otherInput.value.trim().length < 2;
+});
+otherInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && otherInput.value.trim().length >= 2) submitOther();
 });
 
-// ── Lookup ────────────────────────────────────────────────────────────────
-async function doLookup(v) {
-  if (v === lastQuery) return;
-  lastQuery = v;
-  const my = ++reqId;
-  const t0 = performance.now();
-  out.innerHTML = `<div class="loading"><span class="spin"></span> Looking up "${esc(v)}" &amp; tailoring your workspace…</div>`;
+function submitOther() {
+  const v = otherInput.value.trim();
+  if (v.length < 2) return;
+  doSimulate(v, lastIndustryEl);
+}
+
+// ── Call /api/simulate ────────────────────────────────────────────────────
+let pendingReqId = 0;
+async function doSimulate(industry, cardEl) {
+  state.industry = industry;
+  state.advanced = false;
+  const my = ++pendingReqId;
+
+  // show loading state
+  document.getElementById('ind-error').style.display = 'none';
+  document.getElementById('ind-loading-msg').textContent =
+    `Building a sample ${industry} business…`;
+  document.getElementById('ind-loading').style.display = 'flex';
+  if (cardEl) cardEl.disabled = true;
+
   try {
-    const r = await fetch('/api/lookup', {
+    const resp = await fetch('/api/simulate', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ company: v })
+      body: JSON.stringify({ industry })
     });
-    const d = await r.json();
-    if (my !== reqId) return;
-    render(d, Math.round(performance.now() - t0));
+    if (my !== pendingReqId) return;
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (my !== pendingReqId) return;
+    state.lastResult = data;
+    document.getElementById('ind-loading').style.display = 'none';
+    renderSim(data);
+    showScreen('sim');
+    buildSteps('step-sim', 1);
   } catch (e) {
-    if (my !== reqId) return;
-    out.innerHTML = `
-      <div class="none">Something went wrong reaching the lookup service.
-        <span class="reassure">We'll learn as we go — you can tell us more anytime.</span>
-      </div>
-      <div class="cta-row">
-        <button class="btn-primary" id="btnContinue" onclick="advance()">Continue anyway →</button>
-      </div>`;
+    if (my !== pendingReqId) return;
+    document.getElementById('ind-loading').style.display = 'none';
+    document.getElementById('ind-error').style.display = 'block';
+  } finally {
+    if (cardEl) cardEl.disabled = false;
   }
 }
 
-// ── Render result ─────────────────────────────────────────────────────────
-function render(d, ms) {
-  if (!d.found) {
-    out.innerHTML = `
-      <div class="none"><b>We couldn't find public info on that yet — no problem.</b>
-        <div class="reassure">We'll learn as we go, and you can tell us more anytime. Your workspace is still being tailored.</div>
-      </div>
-      <div class="cta-row">
-        <button class="btn-primary" id="btnContinue" onclick="advance()">Continue anyway →</button>
-      </div>`;
-    meta.textContent = `provider: ${d.provider || '?'} · ${ms} ms${d.cached ? ' · cached' : ''}`;
-    return;
-  }
+function retryLast() {
+  if (state.industry) doSimulate(state.industry, lastIndustryEl);
+}
 
-  const f = d.facts || {};
+// ── Render simulation result ───────────────────────────────────────────────
+function renderSim(d) {
+  const c = d.company || {};
+  const ins = d.insight || {};
+  const f = c.facts || {};
+
   const chips = [
-    f.industry && `<div class="kpi"><b>Industry</b> · ${esc(f.industry)}</div>`,
+    f.industry  && `<div class="kpi"><b>Industry</b> · ${esc(f.industry)}</div>`,
     f.employees && `<div class="kpi"><b>Size</b> · ${esc(f.employees)}</div>`,
-    f.hq       && `<div class="kpi"><b>HQ</b> · ${esc(f.hq)}</div>`,
-    f.founded  && `<div class="kpi"><b>Founded</b> · ${esc(f.founded)}</div>`,
-    f.website  && `<div class="kpi"><b>Web</b> · ${esc(f.website)}</div>`
+    f.hq        && `<div class="kpi"><b>HQ</b> · ${esc(f.hq)}</div>`,
+    f.founded   && `<div class="kpi"><b>Founded</b> · ${esc(f.founded)}</div>`,
+    f.model     && `<div class="kpi"><b>Model</b> · ${esc(f.model)}</div>`
   ].filter(Boolean).join('');
 
-  out.innerHTML = `
+  document.getElementById('sim-card').innerHTML = `
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="tag">Simulated example</span>
+      <span class="sim-badge">⚠ SIMULATED EXAMPLE</span>
+    </div>
+
     <div class="infograph">
       <div class="ig-ic">🏢</div>
-      <div>
-        <div class="found-name">Found it 👋 ${esc(d.name)}</div>
-        <div class="synopsis">${esc(d.synopsis)}</div>
-        <div class="kpis">${chips || '<span class="reassure">No structured facts returned — synopsis only.</span>'}</div>
+      <div class="ig-body">
+        <div class="found-name">
+          Found it 👋 ${esc(c.name)}
+          <span class="sim-badge" style="font-size:10px;padding:2px 7px">SIMULATED</span>
+        </div>
+        <div class="synopsis">${esc(c.synopsis)}</div>
+        <div class="kpis">${chips}</div>
       </div>
     </div>
-    <p class="reassure">We'll keep researching in the background to tailor your workspace to your business.</p>
+
+    <div class="framing">
+      <b>This is a simulated ${esc(d.industry)} company — not a real business.</b>
+      It shows the kind of profile and insight DataBlueprint produces.
+      When you're ready to connect your own data, you'll get this on your real numbers —
+      and your data always stays yours.
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-title">${esc(ins.title)}</div>
+      <div class="takeaway">${esc(ins.takeaway)}</div>
+      ${renderChart(ins.chart)}
+      ${renderTable(ins.table)}
+      <div class="exposition">${esc(ins.exposition)}</div>
+    </div>
+
     <div class="cta-row">
-      <button class="btn-primary" id="btnContinue" onclick="advance()">Looks right — continue →</button>
-      <button class="link-secondary" onclick="resetLookup()">This isn't my company</button>
+      <button class="btn-primary" onclick="advance()">Show me this on my business →</button>
+      <button class="link-secondary" onclick="tryDifferent()">Try a different industry</button>
     </div>
-    <div class="verdict">
-      <div class="verdict-label">Was this accurate? (helps us improve)</div>
-      <div class="verdict-btns">
-        <button onclick="mark('good')">👍 Yes, accurate</button>
-        <button onclick="mark('off')">👎 Off / wrong company</button>
+
+    <div class="feedback">
+      <div class="feedback-label">Was this relevant to your business? (helps us improve)</div>
+      <div class="feedback-btns">
+        <button onclick="mark('good')">👍 Yes, relevant</button>
+        <button onclick="mark('off')">👎 Not really</button>
       </div>
+    </div>
+    <div class="meta" id="meta"></div>`;
+}
+
+// ── Bar chart renderer ────────────────────────────────────────────────────
+function renderChart(chart) {
+  if (!chart || !chart.series || !chart.series.length) return '';
+  const series = chart.series;
+  const vals = series.map(s => s.value);
+  const maxAbs = Math.max(...vals.map(Math.abs), 1);
+  const hasNeg = vals.some(v => v < 0);
+  const POS_H = 100, NEG_H = 50;
+
+  const cols = series.map(s => {
+    const isNeg = s.value < 0;
+    const isZero = s.value === 0;
+    const pct = Math.abs(s.value) / maxAbs;
+    const h = isZero ? 2 : Math.max(3, Math.round(pct * (isNeg ? NEG_H : POS_H)));
+
+    let bg = 'var(--blue)';
+    if (s.highlight) bg = 'var(--green)';
+    else if (s.warn && !isNeg) bg = 'var(--amber)';
+    if (isNeg) bg = 'var(--red)';
+
+    if (hasNeg) {
+      return `
+        <div style="flex:1;min-width:0;text-align:center">
+          <div style="height:${POS_H}px;display:flex;align-items:flex-end">
+            ${!isNeg ? `<div style="width:100%;height:${h}px;background:${bg};border-radius:4px 4px 0 0"></div>` : ''}
+          </div>
+          <div style="height:2px;background:var(--line)"></div>
+          <div style="height:${NEG_H}px;display:flex;align-items:flex-start">
+            ${isNeg ? `<div style="width:100%;height:${h}px;background:${bg};border-radius:0 0 4px 4px"></div>` : ''}
+          </div>
+          <div style="font-size:10px;color:var(--grey);margin-top:5px;line-height:1.3;word-break:break-word">${esc(s.label)}</div>
+        </div>`;
+    }
+    return `
+      <div style="flex:1;min-width:0;text-align:center">
+        <div style="height:${POS_H}px;display:flex;align-items:flex-end;border-bottom:2px solid var(--line)">
+          <div style="width:100%;height:${h}px;background:${bg};border-radius:4px 4px 0 0"></div>
+        </div>
+        <div style="font-size:10px;color:var(--grey);margin-top:5px;line-height:1.3;word-break:break-word">${esc(s.label)}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="chart-wrap">
+      <div class="chart-caption">${esc(chart.caption)}</div>
+      <div style="display:flex;gap:6px;align-items:flex-end">${cols}</div>
     </div>`;
-  meta.textContent = `provider: ${d.provider || '?'} · ${ms} ms${d.cached ? ' · cached' : ''}`;
 }
 
-// ── Advance to goal selection ─────────────────────────────────────────────
+// ── Table renderer ────────────────────────────────────────────────────────
+function renderTable(table) {
+  if (!table || !table.columns || !table.rows) return '';
+  const thead = table.columns.map(c => `<th>${esc(c)}</th>`).join('');
+  const tbody = table.rows.map(row =>
+    `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`
+  ).join('');
+  return `
+    <div class="table-wrap">
+      <table class="insight-table">
+        <thead><tr>${thead}</tr></thead>
+        <tbody>${tbody}</tbody>
+      </table>
+    </div>`;
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────
 function advance() {
-  if (state.advanced) return; // idempotent guard
+  if (state.advanced) return;
   state.advanced = true;
-  state.company = org.value.trim();
-
-  document.getElementById('screen-lookup').style.display = 'none';
-  document.getElementById('screen-goals').style.display = 'block';
-  buildSteps('goals-steps', 1);
+  showScreen('cta');
+  buildSteps('step-cta', 2);
 }
 
-// ── "This isn't my company" — restore input ───────────────────────────────
-function resetLookup() {
-  out.innerHTML = '';
-  meta.textContent = '';
-  lastQuery = '';
+function tryDifferent() {
   state.advanced = false;
-  org.value = '';
-  org.focus();
+  document.querySelectorAll('.ic').forEach(b => b.classList.remove('selected'));
+  document.getElementById('other-row').style.display = 'none';
+  document.getElementById('ind-error').style.display = 'none';
+  document.getElementById('ind-loading').style.display = 'none';
+  showScreen('industry');
+  buildSteps('step-ind', 0);
 }
 
-// ── Back from goal screen ─────────────────────────────────────────────────
-function goBack() {
+function keepExploring() {
   state.advanced = false;
-  document.getElementById('screen-goals').style.display = 'none';
-  document.getElementById('screen-lookup').style.display = 'block';
-}
-
-// ── Goal selection ────────────────────────────────────────────────────────
-function selectGoal(el, key) {
-  document.querySelectorAll('.goal-option').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  state.goal = key;
-
-  const customRow = document.getElementById('custom-goal-row');
-  if (key === 'custom') {
-    customRow.style.display = 'block';
-    customGoalInput.focus();
-    document.getElementById('btnGoalContinue').disabled = customGoalInput.value.trim().length < 3;
+  if (state.lastResult) {
+    showScreen('sim');
+    buildSteps('step-sim', 1);
   } else {
-    customRow.style.display = 'none';
-    document.getElementById('btnGoalContinue').disabled = false;
+    tryDifferent();
   }
 }
 
-customGoalInput.addEventListener('input', () => {
-  const v = customGoalInput.value.trim();
-  document.getElementById('btnGoalContinue').disabled = v.length < 3;
-  if (v.length >= 3) state.goal = v;
-});
-
-// ── Advance to data step ──────────────────────────────────────────────────
-function advanceToData() {
-  if (state.goal === 'custom') {
-    const v = customGoalInput.value.trim();
-    if (v.length < 3) return;
-    state.goal = v;
-  }
-  document.getElementById('screen-goals').style.display = 'none';
-  document.getElementById('screen-data').style.display = 'block';
-  buildSteps('data-steps', 2);
-  document.getElementById('confirmed-name').textContent = state.company || 'there';
-}
-
-// ── Accuracy tally (decoupled from navigation) ────────────────────────────
+// ── Feedback tally (non-navigating) ──────────────────────────────────────
 function mark(v) {
   const k = 'dblp_' + v;
   localStorage.setItem(k, (+localStorage.getItem(k) || 0) + 1);
-  meta.textContent = `Logged: 👍 ${+localStorage.getItem('dblp_good') || 0}  /  👎 ${+localStorage.getItem('dblp_off') || 0}  (saved in your browser for this test)`;
+  const meta = document.getElementById('meta');
+  if (meta) meta.textContent = `Logged: 👍 ${+localStorage.getItem('dblp_good') || 0}  /  👎 ${+localStorage.getItem('dblp_off') || 0}  (saved in your browser for this session)`;
 }
 
 function esc(s) {
-  return (s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  return (s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+buildSteps('step-ind', 0);
 </script>
 </body>
 </html>

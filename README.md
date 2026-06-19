@@ -1,15 +1,14 @@
-# DataBlueprint — Onboarding Company-Lookup Prototype
+# DataBlueprint — Onboarding Industry Simulation Prototype (v2)
 
-A tiny web app that tests the **Stage-2 "it already knows my business" aha moment**: a user types
-their company name, and the app looks it up (LLM + live web search) and reads back a synopsis plus
-fact cards (industry, size, HQ, founded, website).
+A web app that delivers the DataBlueprint aha moment **without asking for any identity up front**.
+The user picks an industry; the app shows a clearly-labeled simulated company in that industry with
+a representative profitability insight. The call to connect real data comes only after value is delivered.
 
-Frontend: `public/index.html` (the Stage-2 screen).
-Backend: `server.js` + `providers/` (one endpoint, pluggable lookup source).
+Frontend: `public/index.html` · Backend: `server.js` + `providers/`
 
 ---
 
-## Run locally (keyless — mock data)
+## Run locally (no API key needed)
 
 ```bash
 npm install
@@ -17,24 +16,24 @@ npm start
 # open http://localhost:8080
 ```
 
-Runs in **mock mode** with no API key. Try `Acme Mechanical` or `BakeMorePies` for canned results,
-any other name for a generic result, and a name containing `zzz` to see the no-result fallback.
+The five core industries (HVAC, Bakery, Marketing Agency, Accounting, Construction) are served from
+a hand-authored library — instant, free, no key required. "Other" industries fall back to a generic
+example unless `ANTHROPIC_API_KEY` is set.
 
-## Run with real lookups (LLM + web search)
+## Run with LLM generation for "Other" industries
 
 ```bash
 cp .env.example .env
-# edit .env and set ANTHROPIC_API_KEY=...  (do NOT commit .env)
+# edit .env: set ANTHROPIC_API_KEY=...  (do NOT commit .env)
 npm start
 ```
 
-With a key present the provider switches to `anthropic` automatically. Each lookup asks Claude to
-web-search the company and return a normalized JSON record; the server caches results in memory.
+With a key set, selecting "Other" and typing any industry asks Claude to invent a fictional company
+and insight in that industry. The result is cached in memory for the session.
 
 ## Deploy to your VPS
 
 ```bash
-# on the VPS, as a deploy user
 git clone <your-repo-url> datablueprint-lookup && cd datablueprint-lookup
 npm install --omit=dev
 cp .env.example .env && nano .env       # set ANTHROPIC_API_KEY
@@ -42,25 +41,38 @@ cp .env.example .env && nano .env       # set ANTHROPIC_API_KEY
 npm i -g pm2 && pm2 start server.js --name dblp-lookup && pm2 save
 ```
 
-Put it behind nginx (TLS via certbot) using `deploy/nginx.conf.example`, or run it as a service
-with `deploy/datablueprint-lookup.service`. Both are documented inline.
-
-**Secrets:** the API key lives only in the VPS `.env` (git-ignored). Never paste it into chat,
-commit it, or expose it to the browser — all lookups go through the server.
+Put it behind nginx using `deploy/nginx.conf.example`, or as a systemd service with
+`deploy/datablueprint-lookup.service`. **Secrets:** the API key lives only in the VPS `.env`
+(git-ignored) — never in the browser or git.
 
 ## What to look for during testing
 
-- Accuracy on **small/local SMBs** (the real ICP) vs. well-known companies.
-- Latency per lookup (shown under the result).
-- No-result handling — does the reassuring fallback fire gracefully?
-- Use the 👍 / 👎 buttons to tally accuracy as you test (stored in your browser).
+- Does the simulated company feel plausible and relevant for each industry?
+- Is the disclosure ("SIMULATED EXAMPLE" badge, framing text) unmistakably clear?
+- Does "Other" produce a coherent result for niche industries?
+- Does the three-screen flow feel natural and low-pressure?
 
-## Endpoint
+## Endpoints
 
-`POST /api/lookup  { "company": "Acme Mechanical" }` →
+`POST /api/simulate  { "industry": "HVAC / Field Services" }` →
 ```json
-{ "found": true, "name": "...", "synopsis": "...",
-  "facts": { "industry":"", "employees":"", "hq":"", "founded":"", "website":"" },
-  "provider": "anthropic" }
+{
+  "industry": "HVAC / Field Services",
+  "simulated": true,
+  "source": "library",
+  "company": { "name": "Summit Air Mechanical (sample)", "synopsis": "...", "facts": { ... } },
+  "insight": {
+    "title": "...", "takeaway": "...",
+    "chart": { "type": "bar", "caption": "... (simulated)", "series": [ ... ] },
+    "table": { "columns": [ ... ], "rows": [ ... ] },
+    "exposition": "..."
+  }
+}
 ```
+`source` is `"library"` for the five core industries, `"generated"` for LLM-generated results,
+or `"library-fallback"` when no key is set and the industry is unknown.
+
+`POST /api/lookup  { "company": "Acme Mechanical" }` — v1 real company lookup, retained for the
+optional opt-in identity step later in the flow.
+
 `GET /api/health` → `{ ok, provider }`
