@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DataBlueprint — Company Lookup (aha-moment test)</title>
+<title>DataBlueprint — Onboarding</title>
 <style>
   :root{--navy:#1f2d3d;--blue:#2e75b6;--blue-d:#245d92;--green:#5a9367;--green-d:#3d6b48;
     --amber:#c98a1e;--grey:#566573;--line:#e2e8ee;--bg:#f4f6f9;--card:#fff;--shadow:0 6px 24px rgba(31,45,61,.10)}
@@ -16,7 +16,7 @@
   h1{font-size:26px;margin:0 0 6px;color:var(--navy)}
   .sub{color:var(--grey);font-size:15px;margin:0 0 22px}
   label{font-size:13px;font-weight:600;color:var(--grey)}
-  input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit;margin-top:6px}
+  input[type=text],input:not([type]){width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit;margin-top:6px}
   input:focus{outline:none;border-color:var(--blue)}
   .tag{display:inline-block;background:#fdf6e9;color:var(--amber);font-size:11px;font-weight:700;letter-spacing:.5px;border-radius:6px;padding:3px 8px;text-transform:uppercase}
   .infograph{display:flex;gap:16px;background:#f7faf8;border:1px solid #d9eadf;border-radius:12px;padding:16px;margin:18px 0 8px;animation:fade .4s ease}
@@ -33,14 +33,50 @@
   .none{background:#fbf7ef;border:1px solid #eadfc8;border-radius:12px;padding:16px;margin-top:18px;color:#7a6533;font-size:14px}
   .reassure{font-size:13px;color:var(--grey);margin-top:8px}
   .meta{font-size:11px;color:#9aa7b2;margin-top:14px}
-  .verdict{display:flex;gap:8px;margin-top:14px}
-  .verdict button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px;font-size:13px;cursor:pointer}
-  .verdict button:hover{border-color:var(--blue)}
+
+  /* Verdict (accuracy only — not navigation) */
+  .verdict{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+  .verdict-label{font-size:12px;color:var(--grey);margin-bottom:6px}
+  .verdict-btns{display:flex;gap:8px}
+  .verdict-btns button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px;font-size:13px;cursor:pointer;font-family:inherit}
+  .verdict-btns button:hover{border-color:var(--blue)}
+
+  /* Primary CTA */
+  .cta-row{margin-top:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .btn-primary{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+  .btn-primary:hover{background:var(--blue-d)}
+  .btn-primary:disabled{opacity:.5;cursor:default}
+  .link-secondary{background:none;border:none;color:var(--grey);font-size:13px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0}
+  .link-secondary:hover{color:var(--navy)}
+
+  /* Step indicator */
+  .steps{display:flex;align-items:center;margin-bottom:24px}
+  .step-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--grey)}
+  .step-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .step-dot.done{background:var(--green);color:#fff}
+  .step-dot.active{background:var(--blue);color:#fff}
+  .step-dot.pending{background:var(--line);color:var(--grey)}
+  .step-connector{flex:1;height:2px;background:var(--line);margin:0 8px;min-width:20px}
+  .step-connector.done{background:var(--green)}
+
+  /* Goal selection */
+  #screen-goals{display:none}
+  .goals-grid{display:grid;gap:10px;margin:20px 0 4px}
+  .goal-option{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;font-size:14.5px;color:var(--navy);text-align:left;font-family:inherit;line-height:1.4;transition:border-color .15s,box-shadow .15s;display:flex;align-items:center;gap:12px}
+  .goal-option:hover{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.08)}
+  .goal-option.selected{border-color:var(--blue);background:#f0f6fc;box-shadow:0 0 0 3px rgba(46,117,182,.10)}
+  .goal-icon{font-size:20px;flex-shrink:0}
+
+  /* Data placeholder */
+  #screen-data{display:none}
+  .check-circle{width:60px;height:60px;border-radius:50%;background:#f0f6fc;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px}
 </style>
 </head>
 <body>
-  <div class="bar"><b>DataBlueprint</b> <span class="pill">Stage 2 · Company Lookup — aha-moment test</span></div>
-  <div class="center">
+  <div class="bar"><b>DataBlueprint</b> <span class="pill">Onboarding</span></div>
+
+  <!-- Screen 1: Company lookup -->
+  <div class="center" id="screen-lookup">
     <div class="card">
       <span class="tag">Step toward your first answer</span>
       <h1 style="margin-top:10px">Tell us who you are</h1>
@@ -53,55 +89,145 @@
     <p class="reassure" style="text-align:center">This page tests how well the live lookup performs across real companies. Try your own customers' names, SMBs, and obscure local businesses.</p>
   </div>
 
+  <!-- Screen 2: Goal selection (Step 1 of 2) -->
+  <div class="center" id="screen-goals">
+    <div id="goals-steps" class="steps"></div>
+    <div class="card">
+      <span class="tag">Step 1 of 2</span>
+      <h1 style="margin-top:10px">Almost there!</h1>
+      <p class="sub">What do you want to figure out first? Pick one — you can change it anytime.</p>
+      <div class="goals-grid">
+        <button class="goal-option" onclick="selectGoal(this,'revenue')">
+          <span class="goal-icon">💰</span>Which products or services make the most money?
+        </button>
+        <button class="goal-option" onclick="selectGoal(this,'losses')">
+          <span class="goal-icon">📉</span>Where am I losing money?
+        </button>
+        <button class="goal-option" onclick="selectGoal(this,'customers')">
+          <span class="goal-icon">🤝</span>Who are my most valuable customers?
+        </button>
+        <button class="goal-option" onclick="selectGoal(this,'custom')">
+          <span class="goal-icon">✏️</span>Let me type my own goal…
+        </button>
+      </div>
+      <div id="custom-goal-row" style="display:none;margin-top:4px">
+        <input id="custom-goal-input" placeholder="Describe what you want to figure out…" autocomplete="off" style="margin-top:0">
+      </div>
+      <div class="cta-row">
+        <button class="btn-primary" id="btnGoalContinue" disabled onclick="advanceToData()">Continue →</button>
+        <button class="link-secondary" onclick="goBack()">← Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 3: Data step placeholder (Step 2 of 2) -->
+  <div class="center" id="screen-data">
+    <div id="data-steps" class="steps"></div>
+    <div class="card" style="text-align:center;padding:48px 34px">
+      <div class="check-circle">🎯</div>
+      <h1 style="font-size:22px">You're all set, <span id="confirmed-name"></span>!</h1>
+      <p class="sub" style="margin-bottom:0">Your workspace is being personalized around your goal. We'll walk you through connecting your data next.</p>
+      <div class="cta-row" style="justify-content:center;margin-top:28px">
+        <button class="btn-primary" onclick="alert('Data connection step coming soon!')">Connect my data →</button>
+      </div>
+    </div>
+  </div>
+
 <script>
 const org = document.getElementById('org');
 const out = document.getElementById('out');
 const meta = document.getElementById('meta');
-let timer = null, lastQuery = "", reqId = 0;
+const customGoalInput = document.getElementById('custom-goal-input');
 
+let timer = null, lastQuery = '', reqId = 0;
+const state = { company: '', goal: '', advanced: false };
+
+// ── Step indicator ────────────────────────────────────────────────────────
+function buildSteps(containerId, activeIndex) {
+  const container = document.getElementById(containerId);
+  const labels = ['Company', 'Your goal', 'Add data'];
+  container.innerHTML = '';
+  labels.forEach((label, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot ' + (i < activeIndex ? 'done' : i === activeIndex ? 'active' : 'pending');
+    dot.textContent = i < activeIndex ? '✓' : String(i + 1);
+    const lbl = document.createElement('span');
+    lbl.textContent = label;
+    const item = document.createElement('div');
+    item.className = 'step-item';
+    item.append(dot, lbl);
+    container.append(item);
+    if (i < labels.length - 1) {
+      const conn = document.createElement('div');
+      conn.className = 'step-connector' + (i < activeIndex ? ' done' : '');
+      container.append(conn);
+    }
+  });
+}
+
+// ── Input listener ────────────────────────────────────────────────────────
 org.addEventListener('input', () => {
   const v = org.value.trim();
   clearTimeout(timer);
-  if (v.length < 2){ out.innerHTML=''; meta.textContent=''; return; }
-  timer = setTimeout(() => doLookup(v), 600); // debounce while typing
+  // Clear result and reset advance guard whenever the user retypes
+  out.innerHTML = '';
+  meta.textContent = '';
+  lastQuery = '';
+  state.advanced = false;
+  if (v.length < 2) return;
+  timer = setTimeout(() => doLookup(v), 600);
 });
 
-async function doLookup(v){
+// ── Lookup ────────────────────────────────────────────────────────────────
+async function doLookup(v) {
   if (v === lastQuery) return;
   lastQuery = v;
   const my = ++reqId;
   const t0 = performance.now();
-  out.innerHTML = `<div class="loading"><span class="spin"></span> Looking up “${esc(v)}” &amp; tailoring your workspace…</div>`;
-  try{
+  out.innerHTML = `<div class="loading"><span class="spin"></span> Looking up "${esc(v)}" &amp; tailoring your workspace…</div>`;
+  try {
     const r = await fetch('/api/lookup', {
-      method:'POST', headers:{'content-type':'application/json'},
+      method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ company: v })
     });
     const d = await r.json();
-    if (my !== reqId) return; // a newer query superseded this one
-    const ms = Math.round(performance.now() - t0);
-    render(d, ms);
-  }catch(e){
     if (my !== reqId) return;
-    out.innerHTML = `<div class="none">Something went wrong reaching the lookup service. <span class="reassure">We'll learn as we go — you can tell us more anytime.</span></div>`;
+    render(d, Math.round(performance.now() - t0));
+  } catch (e) {
+    if (my !== reqId) return;
+    out.innerHTML = `
+      <div class="none">Something went wrong reaching the lookup service.
+        <span class="reassure">We'll learn as we go — you can tell us more anytime.</span>
+      </div>
+      <div class="cta-row">
+        <button class="btn-primary" id="btnContinue" onclick="advance()">Continue anyway →</button>
+      </div>`;
   }
 }
 
-function render(d, ms){
-  if (!d.found){
-    out.innerHTML = `<div class="none"><b>We couldn't find public info on that yet — no problem.</b>
-      <div class="reassure">We'll learn as we go, and you can tell us more anytime. Your workspace is still being tailored.</div></div>`;
-    meta.textContent = `provider: ${d.provider||'?'} · ${ms} ms${d.cached?' · cached':''}`;
+// ── Render result ─────────────────────────────────────────────────────────
+function render(d, ms) {
+  if (!d.found) {
+    out.innerHTML = `
+      <div class="none"><b>We couldn't find public info on that yet — no problem.</b>
+        <div class="reassure">We'll learn as we go, and you can tell us more anytime. Your workspace is still being tailored.</div>
+      </div>
+      <div class="cta-row">
+        <button class="btn-primary" id="btnContinue" onclick="advance()">Continue anyway →</button>
+      </div>`;
+    meta.textContent = `provider: ${d.provider || '?'} · ${ms} ms${d.cached ? ' · cached' : ''}`;
     return;
   }
+
   const f = d.facts || {};
   const chips = [
     f.industry && `<div class="kpi"><b>Industry</b> · ${esc(f.industry)}</div>`,
     f.employees && `<div class="kpi"><b>Size</b> · ${esc(f.employees)}</div>`,
-    f.hq && `<div class="kpi"><b>HQ</b> · ${esc(f.hq)}</div>`,
-    f.founded && `<div class="kpi"><b>Founded</b> · ${esc(f.founded)}</div>`,
-    f.website && `<div class="kpi"><b>Web</b> · ${esc(f.website)}</div>`
+    f.hq       && `<div class="kpi"><b>HQ</b> · ${esc(f.hq)}</div>`,
+    f.founded  && `<div class="kpi"><b>Founded</b> · ${esc(f.founded)}</div>`,
+    f.website  && `<div class="kpi"><b>Web</b> · ${esc(f.website)}</div>`
   ].filter(Boolean).join('');
+
   out.innerHTML = `
     <div class="infograph">
       <div class="ig-ic">🏢</div>
@@ -112,19 +238,94 @@ function render(d, ms){
       </div>
     </div>
     <p class="reassure">We'll keep researching in the background to tailor your workspace to your business.</p>
+    <div class="cta-row">
+      <button class="btn-primary" id="btnContinue" onclick="advance()">Looks right — continue →</button>
+      <button class="link-secondary" onclick="resetLookup()">This isn't my company</button>
+    </div>
     <div class="verdict">
-      <button onclick="mark('good')">👍 This is accurate</button>
-      <button onclick="mark('off')">👎 Off / wrong company</button>
+      <div class="verdict-label">Was this accurate? (helps us improve)</div>
+      <div class="verdict-btns">
+        <button onclick="mark('good')">👍 Yes, accurate</button>
+        <button onclick="mark('off')">👎 Off / wrong company</button>
+      </div>
     </div>`;
-  meta.textContent = `provider: ${d.provider||'?'} · ${ms} ms${d.cached?' · cached':''}`;
+  meta.textContent = `provider: ${d.provider || '?'} · ${ms} ms${d.cached ? ' · cached' : ''}`;
 }
 
-function mark(v){
-  // lightweight client-side tally so testers can rate accuracy as they go
-  const k='dblp_'+v; const n=(+localStorage.getItem(k)||0)+1; localStorage.setItem(k,n);
-  meta.textContent = `Logged: 👍 ${(+localStorage.getItem('dblp_good')||0)}  /  👎 ${(+localStorage.getItem('dblp_off')||0)}  (saved in your browser for this test)`;
+// ── Advance to goal selection ─────────────────────────────────────────────
+function advance() {
+  if (state.advanced) return; // idempotent guard
+  state.advanced = true;
+  state.company = org.value.trim();
+
+  document.getElementById('screen-lookup').style.display = 'none';
+  document.getElementById('screen-goals').style.display = 'block';
+  buildSteps('goals-steps', 1);
 }
-function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+// ── "This isn't my company" — restore input ───────────────────────────────
+function resetLookup() {
+  out.innerHTML = '';
+  meta.textContent = '';
+  lastQuery = '';
+  state.advanced = false;
+  org.value = '';
+  org.focus();
+}
+
+// ── Back from goal screen ─────────────────────────────────────────────────
+function goBack() {
+  state.advanced = false;
+  document.getElementById('screen-goals').style.display = 'none';
+  document.getElementById('screen-lookup').style.display = 'block';
+}
+
+// ── Goal selection ────────────────────────────────────────────────────────
+function selectGoal(el, key) {
+  document.querySelectorAll('.goal-option').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.goal = key;
+
+  const customRow = document.getElementById('custom-goal-row');
+  if (key === 'custom') {
+    customRow.style.display = 'block';
+    customGoalInput.focus();
+    document.getElementById('btnGoalContinue').disabled = customGoalInput.value.trim().length < 3;
+  } else {
+    customRow.style.display = 'none';
+    document.getElementById('btnGoalContinue').disabled = false;
+  }
+}
+
+customGoalInput.addEventListener('input', () => {
+  const v = customGoalInput.value.trim();
+  document.getElementById('btnGoalContinue').disabled = v.length < 3;
+  if (v.length >= 3) state.goal = v;
+});
+
+// ── Advance to data step ──────────────────────────────────────────────────
+function advanceToData() {
+  if (state.goal === 'custom') {
+    const v = customGoalInput.value.trim();
+    if (v.length < 3) return;
+    state.goal = v;
+  }
+  document.getElementById('screen-goals').style.display = 'none';
+  document.getElementById('screen-data').style.display = 'block';
+  buildSteps('data-steps', 2);
+  document.getElementById('confirmed-name').textContent = state.company || 'there';
+}
+
+// ── Accuracy tally (decoupled from navigation) ────────────────────────────
+function mark(v) {
+  const k = 'dblp_' + v;
+  localStorage.setItem(k, (+localStorage.getItem(k) || 0) + 1);
+  meta.textContent = `Logged: 👍 ${+localStorage.getItem('dblp_good') || 0}  /  👎 ${+localStorage.getItem('dblp_off') || 0}  (saved in your browser for this test)`;
+}
+
+function esc(s) {
+  return (s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
 </script>
 </body>
 </html>
