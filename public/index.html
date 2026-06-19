@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataBlueprint — Company Lookup (aha-moment test)</title>
+<style>
+  :root{--navy:#1f2d3d;--blue:#2e75b6;--blue-d:#245d92;--green:#5a9367;--green-d:#3d6b48;
+    --amber:#c98a1e;--grey:#566573;--line:#e2e8ee;--bg:#f4f6f9;--card:#fff;--shadow:0 6px 24px rgba(31,45,61,.10)}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#222;background:var(--bg)}
+  .bar{background:var(--navy);color:#fff;height:42px;display:flex;align-items:center;gap:12px;padding:0 16px;font-size:13px}
+  .bar .pill{background:rgba(255,255,255,.14);border-radius:20px;padding:3px 12px}
+  .center{max-width:640px;margin:0 auto;padding:46px 24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:34px}
+  h1{font-size:26px;margin:0 0 6px;color:var(--navy)}
+  .sub{color:var(--grey);font-size:15px;margin:0 0 22px}
+  label{font-size:13px;font-weight:600;color:var(--grey)}
+  input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit;margin-top:6px}
+  input:focus{outline:none;border-color:var(--blue)}
+  .tag{display:inline-block;background:#fdf6e9;color:var(--amber);font-size:11px;font-weight:700;letter-spacing:.5px;border-radius:6px;padding:3px 8px;text-transform:uppercase}
+  .infograph{display:flex;gap:16px;background:#f7faf8;border:1px solid #d9eadf;border-radius:12px;padding:16px;margin:18px 0 8px;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .ig-ic{width:54px;height:54px;border-radius:12px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+  .found-name{font-weight:700;color:var(--navy);font-size:16px}
+  .synopsis{color:#33414f;font-size:14.5px;line-height:1.5;margin-top:4px}
+  .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 11px;font-size:12.5px;color:var(--grey)}
+  .kpi b{color:var(--navy)}
+  .loading{display:flex;align-items:center;gap:10px;color:var(--grey);font-size:14px;margin:18px 0 4px}
+  .spin{width:18px;height:18px;border:2px solid #cfd8e0;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .none{background:#fbf7ef;border:1px solid #eadfc8;border-radius:12px;padding:16px;margin-top:18px;color:#7a6533;font-size:14px}
+  .reassure{font-size:13px;color:var(--grey);margin-top:8px}
+  .meta{font-size:11px;color:#9aa7b2;margin-top:14px}
+  .verdict{display:flex;gap:8px;margin-top:14px}
+  .verdict button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:8px;font-size:13px;cursor:pointer}
+  .verdict button:hover{border-color:var(--blue)}
+</style>
+</head>
+<body>
+  <div class="bar"><b>DataBlueprint</b> <span class="pill">Stage 2 · Company Lookup — aha-moment test</span></div>
+  <div class="center">
+    <div class="card">
+      <span class="tag">Step toward your first answer</span>
+      <h1 style="margin-top:10px">Tell us who you are</h1>
+      <p class="sub">Start typing your company name — we'll look it up and tailor everything to you.</p>
+      <label for="org">Company or organization</label>
+      <input id="org" placeholder="e.g. Acme Mechanical" autocomplete="off">
+      <div id="out"></div>
+      <div class="meta" id="meta"></div>
+    </div>
+    <p class="reassure" style="text-align:center">This page tests how well the live lookup performs across real companies. Try your own customers' names, SMBs, and obscure local businesses.</p>
+  </div>
+
+<script>
+const org = document.getElementById('org');
+const out = document.getElementById('out');
+const meta = document.getElementById('meta');
+let timer = null, lastQuery = "", reqId = 0;
+
+org.addEventListener('input', () => {
+  const v = org.value.trim();
+  clearTimeout(timer);
+  if (v.length < 2){ out.innerHTML=''; meta.textContent=''; return; }
+  timer = setTimeout(() => doLookup(v), 600); // debounce while typing
+});
+
+async function doLookup(v){
+  if (v === lastQuery) return;
+  lastQuery = v;
+  const my = ++reqId;
+  const t0 = performance.now();
+  out.innerHTML = `<div class="loading"><span class="spin"></span> Looking up “${esc(v)}” &amp; tailoring your workspace…</div>`;
+  try{
+    const r = await fetch('/api/lookup', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ company: v })
+    });
+    const d = await r.json();
+    if (my !== reqId) return; // a newer query superseded this one
+    const ms = Math.round(performance.now() - t0);
+    render(d, ms);
+  }catch(e){
+    if (my !== reqId) return;
+    out.innerHTML = `<div class="none">Something went wrong reaching the lookup service. <span class="reassure">We'll learn as we go — you can tell us more anytime.</span></div>`;
+  }
+}
+
+function render(d, ms){
+  if (!d.found){
+    out.innerHTML = `<div class="none"><b>We couldn't find public info on that yet — no problem.</b>
+      <div class="reassure">We'll learn as we go, and you can tell us more anytime. Your workspace is still being tailored.</div></div>`;
+    meta.textContent = `provider: ${d.provider||'?'} · ${ms} ms${d.cached?' · cached':''}`;
+    return;
+  }
+  const f = d.facts || {};
+  const chips = [
+    f.industry && `<div class="kpi"><b>Industry</b> · ${esc(f.industry)}</div>`,
+    f.employees && `<div class="kpi"><b>Size</b> · ${esc(f.employees)}</div>`,
+    f.hq && `<div class="kpi"><b>HQ</b> · ${esc(f.hq)}</div>`,
+    f.founded && `<div class="kpi"><b>Founded</b> · ${esc(f.founded)}</div>`,
+    f.website && `<div class="kpi"><b>Web</b> · ${esc(f.website)}</div>`
+  ].filter(Boolean).join('');
+  out.innerHTML = `
+    <div class="infograph">
+      <div class="ig-ic">🏢</div>
+      <div>
+        <div class="found-name">Found it 👋 ${esc(d.name)}</div>
+        <div class="synopsis">${esc(d.synopsis)}</div>
+        <div class="kpis">${chips || '<span class="reassure">No structured facts returned — synopsis only.</span>'}</div>
+      </div>
+    </div>
+    <p class="reassure">We'll keep researching in the background to tailor your workspace to your business.</p>
+    <div class="verdict">
+      <button onclick="mark('good')">👍 This is accurate</button>
+      <button onclick="mark('off')">👎 Off / wrong company</button>
+    </div>`;
+  meta.textContent = `provider: ${d.provider||'?'} · ${ms} ms${d.cached?' · cached':''}`;
+}
+
+function mark(v){
+  // lightweight client-side tally so testers can rate accuracy as they go
+  const k='dblp_'+v; const n=(+localStorage.getItem(k)||0)+1; localStorage.setItem(k,n);
+  meta.textContent = `Logged: 👍 ${(+localStorage.getItem('dblp_good')||0)}  /  👎 ${(+localStorage.getItem('dblp_off')||0)}  (saved in your browser for this test)`;
+}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+</script>
+</body>
+</html>
